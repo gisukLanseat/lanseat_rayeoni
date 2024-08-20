@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container bg-secondary text-center shadow-sm p-3 my-2">
+    <h1 class="my-3 text-light">랜선석 예약</h1>
+    {% if closeTime <= time and time < openTime  %}
+    <div class="alert alert-danger">
+        <div>
+            <strong>현재는 예약 가능 시간이 아닙니다(예약 가능 시간:오전 9시~익일 오전 2시)  {{time}}</strong>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="https://forms.gle/dQbBGKQeqxySYSgVA"><button class="btn btn-info my-3" type="submit">오류 제보</button></a>
+    </div>
+    {% else %}
+    <form action="{% url 'main:main'%}" method="post">
+        {% csrf_token %}
+        {% if error_msg %}
+        <div class="alert alert-danger">
+            {% for error in error_msg %}
+            <div>
+                <strong>{{error}}</strong>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="student_number" id="student_number" value=""
+                placeholder="방번호+이름(예:101김고국)을 입력하세요" aria-label="학번을 입력하세요" aria-describedby="basic-addon2">
+            <span class="input-group-text" id="basic-addon2">학번</span>
+        </div>
+        <select class="form-select" name="room" aria-label="Default select example">
+            {% for s in seats %}
+            <option value={{s}}>{{s}}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-primary my-2" type="submit">예약하기</button>
+        <div class="container">
+            <a href="https://forms.gle/dQbBGKQeqxySYSgVA"><button class="btn btn-info my-3" type="submit">오류 제보</button></a>
+        </div>
+        
+    </form>
+    {% endif %}
+</div>
+{% endblock content %}
